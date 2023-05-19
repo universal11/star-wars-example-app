@@ -21,11 +21,11 @@ GET /api/Starship/getByPilotName/Luke%20Skywalker
 
 ### Via CLI
 ```
-php artisan star-wars:get-starships-by-pilot-name "Luke Skywalker"
+php artisan star-wars:get-species-classifications-by-episode 1
 ```
 
 ### Via API
 ```
-GET /api/Starship/getByPilotName/Luke%20Skywalker
+GET /api/Film/getSpeciesClassificationsByEpisode/1
 ```
 

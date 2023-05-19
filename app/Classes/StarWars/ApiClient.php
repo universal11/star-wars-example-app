@@ -30,6 +30,13 @@ class ApiClient {
         return $response;
     }
 
+    public function getFilms(){
+        $url = $this->getURLFromPath("films");
+        $response = Http::get($url);
+        $response->throw();
+        return $response;
+    }
+
     public function getPersonByName($name){
         if($name == null || trim($name) == ""){
             throw new Exception("Invalid name provided");
@@ -79,5 +86,82 @@ class ApiClient {
         return $starships;
     }
 
+    public function getFilmByEpisode($episodeId){
+        $filteredFilm = null;
+       
+        try{
+            $response = $this->getFilms();
+            $data = $response->object();
+            $films = $data->results;
+            foreach($films as $film){
+                if($film->episode_id == $episodeId){
+                    $filteredFilm = $film;
+                    break;
+                }
+            }
+
+        }
+        catch(Exception $exception){
+            throw $exception;
+        }
+
+        return $filteredFilm;
+    }
+
+    public function getSpeciesByFilm($film){
+        $species = [];
+        try{
+            foreach($film->species as $speciesURL){
+                $response = Http::get($speciesURL);
+                $response->throw();
+                $species[] = $response->object();
+            }
+        }
+        catch(Exception $exception){
+            throw $exception;
+        }
+        return $species;
+    }
+
+    public function getSpeciesByEpisode($episodeNumber){
+        $species = [];
+       
+        try{
+            $film = $this->getFilmByEpisode($episodeNumber);
+            if( $film == null){
+                throw new Exception("Film not found.");
+            }
+
+            $species = $this->getSpeciesByFilm($film);
+
+        }
+        catch(Exception $exception){
+            throw $exception;
+        }
+
+        return $species;
+    }
+
+    public function getSpeciesClassificationsByEpisode($episodeNumber){
+        $classifications = [];
+       
+        try{
+            $film = $this->getFilmByEpisode($episodeNumber);
+            if( $film == null){
+                throw new Exception("Film not found.");
+            }
+
+            $species = $this->getSpeciesByFilm($film);
+            foreach($species as $specimen){
+                $classifications[] = $specimen->classification;
+            }
+
+        }
+        catch(Exception $exception){
+            throw $exception;
+        }
+
+        return $classifications;
+    }
 
 }

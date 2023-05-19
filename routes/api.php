@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StarshipController;
+use App\Http\Controllers\FilmController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get("/Starship/getByPilotName/{pilotName}", [StarshipController::class, "getByPilotName"]);
+
+Route::get("/Film/getSpeciesClassificationsByEpisode/{episodeNumber}", [FilmController::class, "getSpeciesClassificationsByEpisode"]);
+
