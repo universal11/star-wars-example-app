@@ -63,8 +63,13 @@ class ApiClient {
         try{
             $response = $this->getPersonByName($name);
             $data = $response->object();
+            if( count($data->results) == 0 ){
+                throw new Exception("Pilot not found.");
+            }
+
             $person = $data->results[0];
             $starships = $this->getStarshipsByPerson($person);
+            
 
         }
         catch(Exception $exception){
