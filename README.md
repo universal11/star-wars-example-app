@@ -29,3 +29,15 @@ php artisan star-wars:get-species-classifications-by-episode 1
 GET /api/Film/getSpeciesClassificationsByEpisode/1
 ```
 
+## Retrieve total population of all the planets in the galaxy
+<br>
+
+### Via CLI
+```
+php artisan star-wars:get-galaxy-total-population
+```
+
+### Via API
+```
+GET /api/Galaxy/getTotalPopulation
+```

@@ -37,6 +37,13 @@ class ApiClient {
         return $response;
     }
 
+    public function getPlanets(){
+        $url = $this->getURLFromPath("planets");
+        $response = Http::get($url);
+        $response->throw();
+        return $response;
+    }
+
     public function getPersonByName($name){
         if($name == null || trim($name) == ""){
             throw new Exception("Invalid name provided");
@@ -162,6 +169,41 @@ class ApiClient {
         }
 
         return $classifications;
+    }
+
+    public function getTotalPopulationOfPlanets($planets){
+        $totalPopulation = 0;
+        foreach($planets as $planet){
+            if($planet->population != "unknown"){
+                $totalPopulation += (int)$planet->population;
+            }
+        }
+        return $totalPopulation;
+    }
+
+    public function getGalaxyTotalPopulation(){
+        $totalPopulation = 0;
+        try{
+            $response = $this->getPlanets();
+            $data = $response->object();
+            $planets = $data->results;
+            $totalPopulation += $this->getTotalPopulationOfPlanets($planets);
+            $nextPlanetListPageURL = $data->next;
+            while($nextPlanetListPageURL != null){
+                $response = Http::get($nextPlanetListPageURL);
+                $response->throw();
+                $data = $response->object();
+                $planets = $data->results;
+                $totalPopulation += $this->getTotalPopulationOfPlanets($planets);
+                $nextPlanetListPageURL = $data->next;
+            }
+
+
+        }
+        catch(Exception $exception){
+            throw $exception;
+        }
+        return $totalPopulation;
     }
 
 }
